@@ -91,7 +91,8 @@ public class Calculator implements EntryPoint {
 			panelMain = new ContentPanel();
 			panelMain.setHeading("Inaer calculator");
 			panelMain.setHeight(300);
-			panelMain.setWidth(420);
+			panelMain.setWidth(415);
+			panelMain.setBorders(true);
 			panelMain.add(vlc);
 		}
 		return panelMain;
@@ -478,13 +479,7 @@ public class Calculator implements EntryPoint {
 			if (textBox().getValue().equals("0")){
 				textBox().setValue(String.valueOf(Num));
 			}else{
-				if(textBox().getValue().contains(".")){
-					textBox().setValue(textBox().getValue().concat(String.valueOf(Num)));
-				}else{
-					int result = Integer.valueOf(textBox().getValue()).intValue();
-					result += Num;
-					textBox().setValue(String.valueOf(result));
-				}
+				textBox().setValue(textBox().getValue()+Num);
 			}
 		}
 	}
@@ -518,7 +513,7 @@ public class Calculator implements EntryPoint {
 		}
 		else{
 			if (result.indexOf(".") == -1)
-				result += ".";
+				result = result + ".";
 		}
 		textBox().setValue(result);
 	}
@@ -557,7 +552,7 @@ public class Calculator implements EntryPoint {
 		final HTML serverResponseLabel = new HTML();
 		VerticalPanel dialogVPanel = new VerticalPanel();
 		dialogVPanel.addStyleName("dialogVPanel");
-		dialogVPanel.add(new HTML("<b>Sending number to the server:</b>"));
+		dialogVPanel.add(new HTML("<b>Sending number to the server:</b>" + textBox().getValue()));
 		dialogVPanel.add(textToServerLabel);
 		dialogVPanel.add(new HTML("<br><b>Server replies:</b>"));
 		dialogVPanel.add(serverResponseLabel);
@@ -572,7 +567,7 @@ public class Calculator implements EntryPoint {
 			}
 		});
 		
-		calcService.calcServer(textBox().getValue(), new AsyncCallback<String>() {
+		calcService.calcServer(textBox().getValue(), new AsyncCallback<String[]>() {
 			public void onFailure(Throwable caught) {
 				// Show the RPC error message to the user
 				dialogBox.setText("Remote Procedure Call - Failure");
@@ -582,10 +577,11 @@ public class Calculator implements EntryPoint {
 				closeButton.setFocus(true);
 			}
 
-			public void onSuccess(String result) {
+			public void onSuccess(String[] result) {
+				textBox().setValue(result[0]);
 				dialogBox.setText("Remote Procedure Call");
 				serverResponseLabel.removeStyleName("serverResponseLabelError");
-				serverResponseLabel.setHTML(result);
+				serverResponseLabel.setHTML((String)result[1]);
 				dialogBox.center();
 				closeButton.setFocus(true);
 			}

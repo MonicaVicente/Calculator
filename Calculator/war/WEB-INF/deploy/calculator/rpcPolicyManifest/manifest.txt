@@ -1,3 +1,3 @@
 # Module calculator
 # RPC service class, partial path of RPC policy file
-com.inaer.calculator.client.CalcService, 4C6AA02A8E7888E277791E0574439F86.gwt.rpc
+com.inaer.calculator.client.CalcService, C5F22EFE98FA1F007649B6137703AC82.gwt.rpc

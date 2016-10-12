@@ -16,37 +16,26 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class CalcServiceImpl extends RemoteServiceServlet implements CalcService {
 
-	public String calcServer(String value) throws IllegalArgumentException {
-		String binary = toBinary(value);
-		insert(value, binary);
-		
+	public String[] calcServer(String value) throws IllegalArgumentException {
 		StringBuilder conver = new StringBuilder();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		List<Binary> listBinaries = entries();
-		for(Binary b : listBinaries){
-			conver.append("Value:" + b.getValue() + " Binary:" + b.getBinValue() + " Date:" + sdf.format(b.getDate()) + "<br>");
+		String binary="0";
+		try {
+			binary = toBinary(value);
+			insert(value, binary);
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			List<Binary> listBinaries = entries();
+			for(Binary b : listBinaries){
+				conver.append("Value:" + b.getValue() + " Binary:" + b.getBinValue() + " Date:" + sdf.format(b.getDate()) + "<br>");
+			}
+		} catch (NumberFormatException nfe) {
+			conver.append("Can't convert " + value);
 		}
-		return conver.toString();
+		return new String[]{binary, conver.toString()};
 	}
 	
 	public static String toBinary(String value) {
-		int n = Integer.valueOf(value);
-		String bin = "";
-		if (n > 0) {
-			while (n > 0) {
-				if (n % 2 == 0) {
-					bin = "0" + bin;
-				} else {
-					bin = "1" + bin;
-				}
-				n = (int) n / 2;
-			}
-		} else if (n == 0) {
-			bin = "0";
-		} else {
-			bin = null;
-		}
-		return bin;
+		Integer n = Integer.valueOf(value);
+		return Integer.toString(n.intValue(),2);
 	}
 	
 	private void insert (final String value, final String binaryValue) {

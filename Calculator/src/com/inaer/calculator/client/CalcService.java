@@ -8,5 +8,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("calc")
 public interface CalcService extends RemoteService {
-	String calcServer(String value) throws IllegalArgumentException;
+	String[] calcServer(String value) throws IllegalArgumentException;
 }
